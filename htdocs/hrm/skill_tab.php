@@ -163,6 +163,7 @@ if (empty($reshook)) {
 	} elseif ($action == 'saveSkill' && $permissiontoadd) {
 		if (!empty($TNote)) {
 			foreach ($TNote as $skillId => $rank) {
+				$rank = ($rank == "NA" ? -1 : $rank);
 				$TSkills = $skill->fetchAll('ASC', 't.rowid', 0, 0, '(fk_object:=:'.((int) $id).") AND (objecttype:=:'".$db->escape($objecttype)."') AND (fk_skill:=:".((int) $skillId).')');
 				'@phan-var-force SkillRank[] $tSkills';
 				if (is_array($TSkills) && !empty($TSkills)) {
