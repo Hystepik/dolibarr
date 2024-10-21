@@ -155,8 +155,6 @@ if (empty($reshook)) {
 						$index++;
 					}
 				}
-				header("Location: ".$_SERVER["PHP_SELF"]."?id=".$object->id);
-				exit;
 			}
 			if ($action == 'update' && $permissiontoadd) {
 				foreach ($skilldetArray as $key => $SkValueToUpdate) {
@@ -170,8 +168,6 @@ if (empty($reshook)) {
 						}
 					}
 				}
-				header("Location: ".$_SERVER["PHP_SELF"]."?id=".$object->id);
-				exit;
 			}
 		}
 	}
