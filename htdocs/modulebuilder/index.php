@@ -1853,10 +1853,15 @@ if ($dirins && $action == 'addproperty' && empty($cancel) && !empty($module) && 
 
 
 		if (!$error && !GETPOST('regenerateclasssql') && !GETPOST('regeneratemissing')) {
+			$type = strtolower(GETPOST('proptype', 'alpha'));
+			$typelen = GETPOST('proptype_input', 'alpha');
+			if (!empty($typelen)) {
+				$type .= "(".$typelen.")";
+			}
 			$addfieldentry = array(
 				'name' => GETPOST('propname', 'aZ09'),
 				'label' => GETPOST('proplabel', 'alpha'),
-				'type' => strtolower(GETPOST('proptype', 'alpha')),
+				'type' => $type,
 				'arrayofkeyval' => GETPOST('proparrayofkeyval', 'nohtml'), 	// Example json string '{"0":"Draft","1":"Active","-1":"Cancel"}'
 				'visible' => GETPOST('propvisible', 'alphanohtml'),
 				'enabled' => GETPOST('propenabled', 'alphanohtml'),
@@ -4168,7 +4173,7 @@ if ($module == 'initmodule') {
 						print '<td class="titlefieldcreate fieldrequired">'.$attribute.'</td><td class="valuefieldcreate maxwidth50"><input class="maxwidth200" id="'.$key.'" type="text" name="'.$key.'" value="'.dol_escape_htmltag(GETPOST($key, 'alpha')).'"></td>';
 					} elseif ($key == 'proptype') {
 						print '<td class="titlefieldcreate fieldrequired">'.$attribute.'</td><td class="valuefieldcreate maxwidth50">';
-						print '<input class="maxwidth200" name="'.$key.'" id="'.$key.'" list="datalist'.$key.'" type="text" value="'.dol_escape_htmltag(GETPOST($key, 'alpha')).'">';
+						//print '<input class="maxwidth200" name="'.$key.'" id="'.$key.'" list="datalist'.$key.'" type="text" value="'.dol_escape_htmltag(GETPOST($key, 'alpha')).'">';
 						//print '<div id="suggestions"></div>';
 						print '<datalist id="datalist'.$key.'">';
 						print '<option>varchar(128)</option>';
@@ -4195,6 +4200,7 @@ if ($module == 'initmodule') {
 						print $formadmin->selectTypeOfFields($key, GETPOST($key, 'alpha'));
 						*/
 						print '</datalist>';
+						print $form->SelectFieldType($key);
 						print '</td>';
 						//} elseif ($key == 'propvalidate') {
 						//	print '<td class="titlefieldcreate">'.$attribute.'</td><td class="valuefieldcreate maxwidth50"><input type="number" step="1" min="0" max="1" class="text maxwidth100" value="'.dol_escape_htmltag(GETPOST($key, 'alpha')).'"></td>';

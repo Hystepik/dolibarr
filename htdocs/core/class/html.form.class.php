@@ -12981,4 +12981,71 @@ class Form
 			return '';
 		}
 	}
+
+	/**
+	 * 
+	 */
+	public function SelectFieldType($htmlname)
+	{
+		global $langs;
+
+		$out = '';
+		$fieldtypearray = array(
+			'varchar' => array("label" => "String1Line", "data-input" => "input"),
+			'text' => array("label" => "TextLongNLines", "data-input" => "none"),
+			'html' => array("label" => "HtmlText", "data-input" => "none"),
+			'integer' => array("label" => "Int", "data-input" => "none"),
+			'double' => array("label" => "Float", "data-input" => "input"),
+			'real' => array("label" => "Real", "data-input" => "none"),
+			'date' => array("label" => "Date", "data-input" => "none"),
+			'datetime' => array("label" => "DateAndTime", "data-input" => "none"),
+			'phone' => array("label" => "Phone", "data-input" => "none"),
+			'email' => array("label" => "Email", "data-input" => "none"),
+			'url' => array("label" => "URL", "data-input" => "none"),
+			'ip' => array("label" => "IP", "data-input" => "none"),
+			'password' => array("label" => "Password", "data-input" => "none"),
+			'stars' => array("label" => "Stars", "data-input" => "input"),
+			'link' => array("label" => "LinkObject", "data-input" => "select")
+		);
+		foreach ($fieldtypearray as $proptype => $val) {
+			$pictoType = $proptype;
+			if (preg_match('/^varchar/', $proptype, $matches)) {
+				$pictoType = 'varchar';
+			} elseif (preg_match('/^integer:/', $proptype, $matches)) {
+				$pictoType = 'link';
+			} elseif (strpos($proptype, 'integer') === 0) {
+				$pictoType = substr($proptype, 0, 3);
+			} elseif (strpos($proptype, 'timestamp') === 0) {
+				$pictoType = 'datetime';
+			} elseif (strpos($proptype, 'real') === 0) {
+				$pictoType = 'double';
+			} elseif (strpos($proptype, 'stars') === 0) {
+				$pictoType = 'stars';
+			}
+			elseif (strpos($proptype, 'email') === 0) {
+				$pictoType = 'mail';
+			}
+			$fieldtypearray[$proptype]["label"] = getPictoForType($pictoType) .' '.$langs->transnoentitiesnoconv($fieldtypearray[$proptype]["label"]);
+		}
+
+		$out .= $this->selectarray($htmlname, $fieldtypearray, $htmlname, -1, 0, 0, '', 0, 0, 0, '', 'maxwidth300', 1, '', 0, 0);
+
+		$out .= '<input class="hidden maxwidth50" id="'.$htmlname.'_input" name="'.$htmlname.'_input">';
+
+		$out.= '<script>
+		$(document).ready(function() {
+			$("#'.$htmlname.'").on("change", function() {
+				input = $("#'.$htmlname.' :selected").data("input");
+				if (input == "select") {
+					$("#'.$htmlname.'_input").hide();
+				} else if (input == "input") {
+					$("#'.$htmlname.'_input").show();
+				} else {
+					$("#'.$htmlname.'_input").hide();
+				}
+			});
+		});
+		</script>';
+		return $out;
+	}
 }
